@@ -35,8 +35,6 @@ for optional bundling and minification if required.
 
 ### Installation
 
-`git clone https://github.com/David-Else/zen-typescript-starter-project`
-
 `npm install` or pnpm/yarn install
 
 ### Run NPM Scripts.
@@ -47,30 +45,6 @@ Typical use might be run 'start-typescript-development' to start compilation,
 testing, and linting. This will continuously convert all newly edited TypeScript
 files to .js files in the same directory. Use the recommended Visual Studio Code
 settings below to make the compiled .js files invisible in the editor.
-
-### Live Preview
-
-Run your development server of choice to start the live preview in the browser.
-
-To use ES6 Module imports for live browser preview AND TypeScript compilation
-you must import files with the `.js` extension:
-
-```
-import Example from './classes/example.js';
-```
-
-TypeScript resolves the types from the .ts file, and you get browser
-compatibility. It is a bit of a workaround which is discussed here:
-https://github.com/Microsoft/TypeScript/issues/16577#
-
-### Testing
-
-Mocha is run using `--require esm --require ./test/setup-jsdom.js`, so ES6
-Modules work out of the box, and all jsdom settings can be edited in the
-`setup-jsdom.js` file.
-
-The tests are run on the compiled `.js` files, so make sure you are running in
-TSC watch mode or you might find yourself running old versions of the tests.
 
 ### Bundling
 
@@ -96,23 +70,3 @@ humanity if you want to try it.
 The zen-typescript-starter-project bundling facilities are the most basic and
 important, tree shaking and minification. If you want to expand on that then you
 can edit `rollup.config.js` and install additional extensions as needed.
-
-## Recommended [Visual Studio Code](https://code.visualstudio.com/) extensions
-
-`esbenp.prettier-vscode` `ritwickdey.liveserver`
-
-## Recommended Visual Studio Code `settings.json`
-
-```
-  // Typescript, stop compiled .js and .map files showing in explorer
-  "files.exclude": {
-    "**/*.js": { "when": "$(basename).ts" },
-    "**/*.js.map": true
-  },
-```
-
-## Additional Anti-bloat Recommendations
-
-[pnpm - Fast, disk space efficient package manager](https://pnpm.js.org/)
-
-[pika - Find modern packages on npm. Get faster, smaller JavaScript bundles](https://www.pikapkg.com/)
