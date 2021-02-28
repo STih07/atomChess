@@ -7,5 +7,6 @@
 // });
 
 export function test(x: number): number {
+  document.body.innerHTML = 'Hello!'
   return x + 1;
 }
