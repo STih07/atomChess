@@ -5,8 +5,8 @@
 //   plugins: ['jsdom-quokka-plugin'],
 //   jsdom: { file: './index.html' },
 // });
-
+document.body.innerHTML = 'Hello!'
 export function test(x: number): number {
-  document.body.innerHTML = 'Hello!'
+  
   return x + 1;
 }
