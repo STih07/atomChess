@@ -9,3 +9,9 @@
 export function test(x: number): number {
   return x + 1;
 }
+const app: HTMLElement = document.getElementById('app') as HTMLElement;
+
+
+console.log(app);
+
+app.innerHTML ='<b>HELLO CHESS!</b>';
