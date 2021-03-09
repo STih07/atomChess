@@ -5,7 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "start": "tsc-watch",
-    "start-typescript-development": "tsc-watch --onSuccess 'npm --silent run test-and-eslint'",
+    "server": "http-server",
+    "start-typescript-development": "tsc-watch --onSuccess 'http-server'",
     "test-and-eslint": "npm run test && npm run eslint",
     "test": "mocha --reporter min --require esm --require ./setup-jsdom.js",
     "eslint": "eslint --cache --ext .ts src/ test/",
