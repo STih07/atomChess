@@ -12,4 +12,4 @@ export function test(x: number): number {
 
 const app = document.getElementById('app') as HTMLElement;
 console.log(app);
-app.innerHTML = `<b>HELLO CHESS</b>`;
+app.innerHTML = `<b>HELLO CHESS!</b>`;
