@@ -1,0 +1,24 @@
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.row {
+    height: 2.5rem;
+    display: flex;
+}
+
+.row .square{
+    height: 100%;
+    width: 2.5rem;
+    display: inline-block;
+}
+
+.row:nth-child(odd) .square:nth-child(odd), .row:nth-child(even) .square:nth-child(even) {
+    background-color: sandybrown;
+}
+
+.row:nth-child(even) .square:nth-child(odd), .row:nth-child(odd) .square:nth-child(even) {
+    background-color: black;
+}
