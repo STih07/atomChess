@@ -9,10 +9,18 @@
     display: flex;
 }
 
-.row .square{
+.row .square, .row .infosquare{
     height: 100%;
     width: 2.5rem;
     display: inline-block;
+}
+
+.infosquare {
+    display: flex;
+    background: cornsilk;
+    font-size: 1.5rem;
+    align-items: center;
+    justify-content: center;
 }
 
 .row:nth-child(odd) .square:nth-child(odd), .row:nth-child(even) .square:nth-child(even) {
