@@ -10,7 +10,7 @@
 }
 
 .infosquare {
-    display:flex;
+    display: flex;
     background: rgb(255, 235, 228);
     align-items: center;
     font-size: 1.5rem;
@@ -18,10 +18,13 @@
     justify-content: center;
 }
 
-.row .square .row .infosquare {
+
+.row .square, .row .infosquare {
+
     height: 100%;
     width: 2.5rem;
 }
+
 
 .row:nth-child(odd) .square:nth-child(odd), .row:nth-child(even) .square:nth-child(even) {
     background: lightsalmon;
