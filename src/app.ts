@@ -38,3 +38,39 @@ app.innerHTML =
             letter => `<div class="infosquare">${letter}</div>`
         ).join('')}
     </div>`;
+
+
+const pieces = Array.from(document.getElementsByClassName('piece'));
+pieces.forEach(
+    piece => {
+        piece.addEventListener('dragend', (ev: Event) => {
+            ev.preventDefault();
+            if (draggedPiece) {
+                draggedPiece = null;
+            }
+        })
+
+        piece.addEventListener('dragstart', (ev: Event) => {
+            // ev.preventDefault();
+            draggedPiece = ev.target as HTMLElement;
+        })
+    }
+)
+
+let draggedPiece: HTMLElement | null;
+
+const square = Array.from(document.getElementsByClassName('square'));
+square.forEach(
+    square => {
+        square.addEventListener('dragover', (ev) => {
+            ev.preventDefault();
+        });
+        square.addEventListener('drop', (ev) => {
+            ev.preventDefault();
+            if (draggedPiece) {
+                (ev.target as HTMLElement)?.appendChild(draggedPiece);
+                draggedPiece = null;
+            }
+    })
+    }
+)

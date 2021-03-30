@@ -1,0 +1,57 @@
+* {
+    margin: 0;
+    background: none;
+    padding: 0;
+    border: 0;
+}
+
+$white_color: rgb(225, 186, 236);
+$black_color: rgb(107, 76, 76);
+
+.row {
+    height: 2.5rem;
+    display: flex;
+
+    .square, .infosquare {
+        height: 100%;
+        width: 2.5rem;
+    }
+
+    &:nth-child(odd) .square:nth-child(odd), &:nth-child(even) .square:nth-child(even)  {
+        background-color: $white_color;
+    }
+
+    &:nth-child(odd) .square:nth-child(even), &:nth-child(even) .square:nth-child(odd)  {
+        background-color: $black_color;
+    }
+}
+
+.infosquare {
+    display: flex;
+    background: rgb(255, 235, 228);
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    justify-content: center;
+}
+
+
+
+$colors: (w, b);
+$pieces: (king, queen, knight, bishop, pawn, rook);
+$piece_path: '/assets/images/pieces/';
+
+
+.piece {
+    height: 100%;
+    background-position: center;    
+}
+
+
+@each $color in $colors {
+    @each $piece in $pieces { 
+        .piece.#{$color}.#{$piece} {
+            background-image: url($piece_path + $piece + '_' + $color + '.svg');
+        }   
+    }
+}
