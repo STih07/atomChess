@@ -1,0 +1,85 @@
+* {
+  margin: 0;
+  background: none;
+  padding: 0;
+  border: 0;
+}
+
+.row {
+  height: 2.5rem;
+  display: flex;
+}
+.row .square, .row .infosquare {
+  height: 100%;
+  width: 2.5rem;
+}
+.row:nth-child(odd) .square:nth-child(odd), .row:nth-child(even) .square:nth-child(even) {
+  background-color: #e1baec;
+}
+.row:nth-child(odd) .square:nth-child(even), .row:nth-child(even) .square:nth-child(odd) {
+  background-color: #6b4c4c;
+}
+
+.infosquare {
+  display: flex;
+  background: #ffebe4;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  justify-content: center;
+}
+
+.piece {
+  height: 100%;
+  background-position: center;
+}
+
+.piece.w.king {
+  background-image: url("/assets/images/pieces/king_w.svg");
+}
+
+.piece.w.queen {
+  background-image: url("/assets/images/pieces/queen_w.svg");
+}
+
+.piece.w.knight {
+  background-image: url("/assets/images/pieces/knight_w.svg");
+}
+
+.piece.w.bishop {
+  background-image: url("/assets/images/pieces/bishop_w.svg");
+}
+
+.piece.w.pawn {
+  background-image: url("/assets/images/pieces/pawn_w.svg");
+}
+
+.piece.w.rook {
+  background-image: url("/assets/images/pieces/rook_w.svg");
+}
+
+.piece.b.king {
+  background-image: url("/assets/images/pieces/king_b.svg");
+}
+
+.piece.b.queen {
+  background-image: url("/assets/images/pieces/queen_b.svg");
+}
+
+.piece.b.knight {
+  background-image: url("/assets/images/pieces/knight_b.svg");
+}
+
+.piece.b.bishop {
+  background-image: url("/assets/images/pieces/bishop_b.svg");
+}
+
+.piece.b.pawn {
+  background-image: url("/assets/images/pieces/pawn_b.svg");
+}
+
+.piece.b.rook {
+  background-image: url("/assets/images/pieces/rook_b.svg");
+}
+
+/*# sourceMappingURL=main.css.map */

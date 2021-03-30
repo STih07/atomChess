@@ -4,7 +4,10 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start-typescript-development": "tsc-watch --onSuccess 'npm --silent run test-and-eslint'",
+    "start": "tsc-watch",
+    "style": "sass --watch  ./src/main.scss:./src/main.css",
+    "server": "http-server",
+    "start-typescript-development": "tsc-watch --onSuccess 'http-server'",
     "test-and-eslint": "npm run test && npm run eslint",
     "test": "mocha --reporter min --require esm --require ./setup-jsdom.js",
     "eslint": "eslint --cache --ext .ts src/ test/",
@@ -26,6 +29,7 @@
     "jsdom": "^15.2.1",
     "mocha": "^6.2.2",
     "rollup": "^1.27.0",
+    "sass": "^1.32.8",
     "tsc-watch": "^4.0.0",
     "typescript": "^3.7.2"
   },
