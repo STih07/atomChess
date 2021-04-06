@@ -1,5 +1,7 @@
 // Enable the Quokka.js jsdom plugin and parse index.html
 
+import { POINT_CONVERSION_COMPRESSED, SSL_OP_SINGLE_ECDH_USE } from "node:constants";
+
 // eslint-disable-next-line no-unused-expressions
 // ({
 //   plugins: ['jsdom-quokka-plugin'],
@@ -41,3 +43,39 @@ app.innerHTML =
                 letter=>`<div class="infosquare">${letter}</div>`
             ).join('')}
            </div>`;
+
+
+const piece = Array.from(document.getElementsByClassName('piece'));
+piece.forEach(
+    piece => {
+        piece.addEventListener('dragend', (ev: Event) => {
+            ev.preventDefault();
+            console.log(ev);
+            if (draggedPiece) {
+                draggedPiece = null;
+            }
+        })
+        piece.addEventListener('dragstart', (ev: Event) => {
+            // ev.preventDefault();
+            draggedPiece = ev.target as HTMLElement;
+        })
+    }
+)
+
+let draggedPiece: HTMLElement | null;
+
+const square = Array.from(document.getElementsByClassName('square'));
+square.forEach(
+    square => {
+        square.addEventListener('dragover', (ev) => {
+        ev.preventDefault();
+        });
+        square.addEventListener('drop', (ev) => {
+            ev.preventDefault();
+            if (draggedPiece) {
+                (ev.target as HTMLElement).appendChild(draggedPiece);
+                draggedPiece = null;
+            }
+        })
+}
+)
