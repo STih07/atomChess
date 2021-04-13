@@ -17,7 +17,7 @@
   background-color: sandybrown;
 }
 .row:nth-child(odd) .square:nth-child(even), .row:nth-child(even) .square:nth-child(odd) {
-  background-color: #330505;
+  background-color: #500202;
 }
 
 .infosquare {
