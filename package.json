@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "tsc-watch",
+    "start": "concurrently \"npm run ts\" \"npm run style\" \"npm run server\"",
+    "ts": "tsc-watch",
     "style": "sass --watch ./src/main.scss:./src/main.css",
     "server": "http-server",
     "start-typescript-development": "tsc-watch --onSuccess 'http-server'",
@@ -1224,6 +1225,7 @@
     }
   },
   "dependencies": {
+    "concurrently": "^6.0.2",
     "sass": "^1.32.10"
   }
 }

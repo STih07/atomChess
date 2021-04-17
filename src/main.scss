@@ -4,8 +4,8 @@
     border: 0;
 }
 
-$white-color: #ecc7a7;
-$black-color: #2c1414;
+$white-color: #f5f0ec;
+$black-color: #6e5845;
 
 .row {
     height: 2.5rem;
@@ -34,17 +34,12 @@ $black-color: #2c1414;
     justify-content: center;
 }
 
-.piece.white.king {
-    height: 100%;
-    background-position: center;
-    background-image: url(\\assets\\images\\pieces\\king_w.svg)
-}
-
 $colors:(w, b);
-$pieces: (king, queen, knight, bishop, pown, rook);
+$pieces: (king, queen, knight, bishop, pawn, rook);
 $piece_path: '/assets/images/pieces/';
 
 .piece {
+    opacity: 0.9999;
     height: 100%;
     background-position: center;
 }
