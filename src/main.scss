@@ -7,15 +7,11 @@
 
 $white_color: rgb(225, 186, 236);
 $black_color: rgb(107, 76, 76);
+$active_square_color: rgb(170, 161, 35);
 
 .row {
     height: 2.5rem;
     display: flex;
-
-    .square, .infosquare {
-        height: 100%;
-        width: 2.5rem;
-    }
 
     &:nth-child(odd) .square:nth-child(odd), &:nth-child(even) .square:nth-child(even)  {
         background-color: $white_color;
@@ -23,6 +19,15 @@ $black_color: rgb(107, 76, 76);
 
     &:nth-child(odd) .square:nth-child(even), &:nth-child(even) .square:nth-child(odd)  {
         background-color: $black_color;
+    }
+
+    .square, .infosquare {
+        height: 100%;
+        width: 2.5rem;
+    }
+
+    .square.active {
+        filter: sepia(60%);
     }
 }
 

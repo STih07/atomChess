@@ -9,15 +9,18 @@
   height: 2.5rem;
   display: flex;
 }
-.row .square, .row .infosquare {
-  height: 100%;
-  width: 2.5rem;
-}
 .row:nth-child(odd) .square:nth-child(odd), .row:nth-child(even) .square:nth-child(even) {
   background-color: #e1baec;
 }
 .row:nth-child(odd) .square:nth-child(even), .row:nth-child(even) .square:nth-child(odd) {
   background-color: #6b4c4c;
+}
+.row .square, .row .infosquare {
+  height: 100%;
+  width: 2.5rem;
+}
+.row .square.active {
+  filter: sepia(60%);
 }
 
 .infosquare {
