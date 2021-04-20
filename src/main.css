@@ -1,0 +1,30 @@
+*{
+    margin:0;
+    padding: 0;
+    border:0;
+}
+
+.row {
+    height:2.5rem;
+    display: flex;
+
+}
+.infosquare {
+    display: flex;
+    background-color: paleturquoise;
+    align-items:center;
+    justify-content: center;
+}
+
+.row .square, .row .infosquare {
+    height:100%;
+    width: 2.5rem;
+}
+
+.row:nth-child(odd) .square:nth-child(odd), .row:nth-child(even) .square:nth-child(even) {
+    background-color:mintcream;
+}
+
+.row:nth-child(odd) .square:nth-child(even), .row:nth-child(even) .square:nth-child(odd){
+    background-color:black;
+}
