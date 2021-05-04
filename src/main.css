@@ -19,6 +19,9 @@
 .row:nth-child(even) .square:nth-child(odd), .row:nth-child(odd) .square:nth-child(even) {
   background-color: #6e5845;
 }
+.row .square.active {
+  filter: sepia(90%);
+}
 
 .infosquare {
   display: flex;

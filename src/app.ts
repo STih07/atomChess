@@ -97,8 +97,6 @@ app.innerHTML =
     </div>`;
 
 
-
-
 const pieces = Array.from(document.getElementsByClassName('piece'));
 pieces.forEach(
     piece => {
@@ -110,48 +108,91 @@ pieces.forEach(
         })
         piece.addEventListener('dragstart', (ev: Event) => {
             //ev.preventDefault();
-            draggedPiece = ev.target as HTMLElement;
+            const piece = ev.target as HTMLElement; 
+            tookPiece(piece);
         })
     }
 )
 
 let draggedPiece : HTMLElement | null;
+let activeSquare: HTMLElement | null;
 
-const square = Array.from(document.getElementsByClassName('square'));
-square.forEach(square => {
+const squares = Array.from(document.getElementsByClassName('square')) as Array<HTMLElement>;
+squares.forEach(
+    (square) => {
+        square.addEventListener('click', (ev) => {
+            ev.preventDefault();
+            const piece = square.lastElementChild as HTMLElement;
+
+            if (piece) {
+                tookPiece(piece);
+            } else if (square.classList.contains('active')) {
+                putPiece(square);
+            }
+        });
+
     square.addEventListener('dragover', (ev) => {
         ev.preventDefault();
+        
     })
     square.addEventListener('drop', (ev) => {
         ev.preventDefault();
-        const placeBlock = (square as HTMLElement);
-        if (draggedPiece && placeBlock){
-            movePiece(draggedPiece, placeBlock);
-            draggedPiece = null;
-        }
-        })
-    }
+        putPiece(square);
+    })
+}
 )
 
-const movePiece = (pieceRef: HTMLElement, placeBlock: HTMLElement) =>{
-    const [, color, piece] = pieceRef.classList; // [piece w pawn]
-    
-    if (pieceMoveAllowed(piece as Piece, color as Color, pieceRef, placeBlock)){
+const tookPiece = (piece: HTMLElement) => {
+    draggedPiece = piece;
+    changeActiveSquare(piece.parentElement as HTMLElement);
+};
+
+const putPiece = (square: HTMLElement) => {
+    console.log(draggedPiece);
+    if (draggedPiece) {
+        movePiece(draggedPiece, square);
+    }
+    draggedPiece = null;
+}
+
+// @TODO optimize forEach on each square
+const changeActiveSquare = (square: HTMLElement) => {
+    const pieceRef = square?.lastElementChild as HTMLElement;
+    const [, color, piece] = pieceRef.classList; // ['piece', 'w/b', 'pieceName']
+    activeSquare = square;
+    squares.forEach(
+        square => {
+            square.classList.remove('active');
+            if (pieceMoveAllowed(piece as Piece, color as Color, pieceRef, square)) {
+                square.classList.add('active');
+            }
+        }
+    );
+    activeSquare.classList.add('active');
+}
+
+const movePiece = (pieceRef: HTMLElement, placeBlock: HTMLElement) => {
+    //console.log('works2');
+    const [, color, piece] = pieceRef.classList; // ['piece', 'w/b', 'pieceName']
+    console.log(color, piece);
+    console.log(isOtherPieceOnWay(piece as Piece, color as Color, pieceRef, placeBlock))
+    if (pieceMoveAllowed(piece as Piece, color as Color, pieceRef, placeBlock) && !isOtherPieceOnWay(piece as Piece, color as Color, pieceRef, placeBlock)) {
         moves.push({
             piece: {
                 piece: piece as Piece,
-                color: color as Color
+                color: color as Color,
             },
             start: pieceRef.parentElement?.id as string,
-            end: pieceRef.parentElement?.id as string,
+            end: placeBlock.id,
             defeat: placeBlock.lastElementChild ? {
-                piece: placeBlock.lastElementChild?.classList[2] as Piece,
-                color: placeBlock.lastElementChild?.classList[1] as Color
+                piece: placeBlock.lastElementChild.classList[2] as Piece,
+                color: placeBlock.lastElementChild.classList[1] as Color
             } : null
-        })
+        });
         placeBlock.innerHTML = '';
         placeBlock.appendChild(pieceRef);
     }
+    console.log(moves);
 }
 
 const isEndPositionClosedByPiece = (endPositionRef: HTMLElement, color:Color, enemy:boolean) => {
@@ -173,7 +214,7 @@ const pieceMoveAllowed = (piece: Piece, color: Color, startPositionRef: HTMLElem
             case 'bishop':
                 return Math.abs(diffByY) === Math.abs(diffByX);
             case 'knight':
-                const diffByCords = Math.abs(Math.abs(diffByY) - Math.abs(diffByX));
+                //const diffByCords = Math.abs(Math.abs(diffByY) - Math.abs(diffByX));
                 return (Math.abs(diffByY)===2 && Math.abs(diffByX)===1) || (Math.abs(diffByY)===1 && Math.abs(diffByX)===2);
                 //return diffByY <= 2 && diffByX <=2 && diffByCords === 1; 
             case 'king':
@@ -203,3 +244,118 @@ const pieceMoveAllowed = (piece: Piece, color: Color, startPositionRef: HTMLElem
         }
     }
 }
+
+const isOtherPieceOnWay  = (piece: Piece, color: Color, startPositionRef: HTMLElement, endPositionRef: HTMLElement) => {
+    //console.log("We are in the function")
+    const startPosition = startPositionRef.parentElement?.id as string;
+    const endPosition = endPositionRef.id;
+
+    if (!isEndPositionClosedByPiece(endPositionRef, color, false)){
+        const diffByY = +endPosition[1] - +startPosition[1] ; //0
+        const diffByX = letters.indexOf(endPosition[0]) - letters.indexOf(startPosition[0]);
+        let currentPositionRef = startPositionRef;
+        let currentX = letters.indexOf(startPosition[0]);
+        let currentY = +startPosition[1];
+        //console.log(letters.indexOf(startPosition[0]), +startPosition[1])
+        let currentId;
+        let isFirstStep = 0;
+        let iteratorSignX = diffByX === 0 ? 1 : diffByX / Math.abs(diffByX);
+        let iteratorSignY = diffByY === 0 ? 1 : diffByY / Math.abs(diffByY);
+        let isOtherWayForKnight = true;
+        
+        //console.log('iterators', iteratorSignX, iteratorSignY)
+
+        const wayLength = Math.abs(diffByX) + Math.abs(diffByY);
+        
+        //console.log('min', Math.min(diffByY, diffByX), 'way', wayLength)
+        for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength; i++){
+            //console.log('in for')
+            let isPieceOnSquare: boolean = false;
+            //console.log(currentX, currentY)
+
+            squares.forEach(
+                square => {
+                    //console.log(currentX, currentY,square.lastElementChild, "fuuuuck")
+                    if (square.id === letters[currentX] + currentY && square.lastElementChild != null){
+                        isPieceOnSquare = true;
+                        //console.log(currentX, currentY,square.lastElementChild, "fuuuuck")
+                        //console.log("===============")
+                    }
+                }
+            );
+
+            //console.log(currentX, currentY, isPieceOnThisSquare)
+            //console.log(currentPositionRef, 'fuck');
+            if (
+                // if contains piece
+                isPieceOnSquare 
+            ){
+                if (isFirstStep >= 1){
+                    console.log("No!")
+                    if (piece != 'knight'){
+                        return true;
+                    }
+                    else{
+                        //console.log("KNIGHT HANDLER")
+                        isOtherWayForKnight = true;
+                        let knightCurrentX = letters.indexOf(startPosition[0]);
+                        let knightCurrentY = +startPosition[1];
+                        //console.log("knight", diffByY, diffByX, wayLength)
+                        isFirstStep = 0;
+                        for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i <= wayLength; i++){
+                            if (Math.abs(diffByX) > Math.abs(diffByY)){
+                                squares.forEach(
+                                    square => {
+                                        //console.log(knightCurrentX, knightCurrentY,square.lastElementChild, "fuuuuck")
+                                        if (square.id === letters[knightCurrentX] + knightCurrentY && square.lastElementChild != null){
+                                            if (isFirstStep >= 1){ 
+                                                console.log("No2"); 
+                                                isOtherWayForKnight = false;
+                                            };
+                                            //console.log(knightCurrentX, knightCurrentY,square.lastElementChild, "fuuuuck")
+                                            console.log("===============")
+                                        }
+                                        
+                                    }
+                                );
+                                knightCurrentX += iteratorSignX;
+                            }
+                            else {
+                                squares.forEach(
+                                    square => {
+                                        //console.log(knightCurrentX, knightCurrentY,square.lastElementChild, "fuuuuck")
+                                        if (square.id === letters[knightCurrentX] + knightCurrentY && square.lastElementChild != null){
+                                            if (isFirstStep >= 1){ 
+                                                console.log("No3"); 
+                                                isOtherWayForKnight = false;
+                                            };
+                                            //console.log(knightCurrentX, knightCurrentY,square.lastElementChild, "fuuuuck")
+                                            console.log("===============")
+                                        }
+                                        
+                                    }
+                                );
+                                knightCurrentY += iteratorSignY;
+                                console.log(knightCurrentY)
+                            }
+                            isFirstStep += 1;
+                        }
+                        //break;
+                        //isPieceOnSquare = false;
+                    }
+                }
+                isFirstStep += 1;
+                //console.log("step", isFirstStep)
+            }
+            //console.log('if', currentX, letters.indexOf(endPosition[0]))
+            if (currentY * iteratorSignY < +endPosition[1] * iteratorSignY) currentY = currentY + iteratorSignY;
+            if (currentX * iteratorSignX < letters.indexOf(endPosition[0]) * iteratorSignX) currentX = letters.indexOf(letters[currentX + iteratorSignX]);
+            currentId = letters[currentX] + currentY.toString;
+            //currentPositionRef.id = currentId;
+        }
+        console.log('after for', !isOtherWayForKnight)
+        return !isOtherWayForKnight;
+    }
+}
+
+
