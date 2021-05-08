@@ -253,20 +253,21 @@ const isOtherPieceOnWay  = (piece: Piece, color: Color, startPositionRef: HTMLEl
     const wayLength = Math.abs(diffByX) + Math.abs(diffByY);
     let currentX = letters.indexOf(startPosition[0]);
     let currentY = +startPosition[1];
-    let isFirstStep = 0;
     let iteratorSignX = diffByX === 0 ? 1 : diffByX / Math.abs(diffByX);
     let iteratorSignY = diffByY === 0 ? 1 : diffByY / Math.abs(diffByY);
-    let isOtherWayForKnight = true;
+    let isPieceOnSquare = false;
 
     if (piece === 'knight'){
         // проверяем два пути для коня
         return isOtherPieceOnWayKnight(piece, color, startPositionRef, endPositionRef);
     }
 
-    
-    for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength; i++){
-
-        let isPieceOnSquare: boolean = false;
+    for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength-1; i++){
+        // увеличение координат в зависимости от пути и знака
+        if (currentY * iteratorSignY < +endPosition[1] * iteratorSignY) currentY = currentY + iteratorSignY;
+        if (currentX * iteratorSignX < letters.indexOf(endPosition[0]) * iteratorSignX) currentX = letters.indexOf(letters[currentX + iteratorSignX]);
+        
+        // основная проверка
         squares.forEach(
             square => {
                 if (square.id === letters[currentX] + currentY && square.lastElementChild != null){
@@ -276,19 +277,12 @@ const isOtherPieceOnWay  = (piece: Piece, color: Color, startPositionRef: HTMLEl
         );
 
         if (isPieceOnSquare){
-            if (isFirstStep >= 1){ // если первый шаг, то это наша фигура
-                console.log("No!")
-                return true; // ели наша фигура не конь, то ходить нельзя
-            }
-            isFirstStep += 1;
+            console.log("No!")
+            return true;
         }
-        // увеличение координат в зависимости от фигуры и знака
-        if (currentY * iteratorSignY < +endPosition[1] * iteratorSignY) currentY = currentY + iteratorSignY;
-        if (currentX * iteratorSignX < letters.indexOf(endPosition[0]) * iteratorSignX) currentX = letters.indexOf(letters[currentX + iteratorSignX]);
     }
-    
-    return false;
 
+    return false;
 }
 
 const isOtherPieceOnWayKnight  = (piece: Piece, color: Color, startPositionRef: HTMLElement, endPositionRef: HTMLElement) => {
@@ -305,10 +299,11 @@ const isOtherPieceOnWayKnight  = (piece: Piece, color: Color, startPositionRef: 
     let isFirstWay = true;
     let isSecondWay = true;
 
-    for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength*2; i++){
-        if (Math.abs(diffByX) > Math.abs(diffByY)){ // дополнительный пyть по Х
+    if (Math.abs(diffByX) > Math.abs(diffByY)){ // дополнительный пyть по Х
+        for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength*2; i++){
             currentX += iteratorSignX;
-            console.log(currentX, currentY)
+
+            // основная проверка
             squares.forEach(
                 square => {
                     if (square.id === letters[currentX] + currentY && square.lastElementChild != null){
@@ -325,10 +320,25 @@ const isOtherPieceOnWayKnight  = (piece: Piece, color: Color, startPositionRef: 
                     
                 }
             );
+
+            // переход на второй путь
+            if (i == wayLength - 1){
+                currentX = letters.indexOf(startPosition[0]);
+                currentY = +startPosition[1];
+                if (Math.abs(diffByX) > Math.abs(diffByY)){ 
+                    currentY += iteratorSignY;
+                    currentX -= iteratorSignX;
+                }
+                else{
+                    currentX += iteratorSignX;
+                    currentY -= iteratorSignY;
+                }
+            }
         }
-        else { // дополнительный путь по Y
+    }
+    else { // дополнительный путь по Y
+        for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength*2; i++){
             currentY += iteratorSignY;
-            console.log(currentX, currentY)
             squares.forEach(
                 square => {
                     if (square.id === letters[currentX] + currentY && square.lastElementChild != null){
@@ -341,25 +351,27 @@ const isOtherPieceOnWayKnight  = (piece: Piece, color: Color, startPositionRef: 
                             //console.log("No 2nd way"); 
                         }
                     }
-                    
+
                 }
             );
-        }
 
-        if (i == wayLength - 1){
-            currentX = letters.indexOf(startPosition[0]);
-            currentY = +startPosition[1];
-            if (Math.abs(diffByX) > Math.abs(diffByY)){ 
-                currentY += iteratorSignY;
-                currentX -= iteratorSignX;
-            }
-            else{
-                currentX += iteratorSignX;
-                currentY -= iteratorSignY;
+            // переход на второй путь
+            if (i == wayLength - 1){
+                currentX = letters.indexOf(startPosition[0]);
+                currentY = +startPosition[1];
+                if (Math.abs(diffByX) > Math.abs(diffByY)){ 
+                    currentY += iteratorSignY;
+                    currentX -= iteratorSignX;
+                }
+                else{
+                    currentX += iteratorSignX;
+                    currentY -= iteratorSignY;
+                }
             }
         }
     }
 
+    // есть ли хоть один путь
     if (isFirstWay || isSecondWay) return false;
     else return true;
 }
