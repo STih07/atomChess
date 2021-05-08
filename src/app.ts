@@ -258,6 +258,11 @@ const isOtherPieceOnWay  = (piece: Piece, color: Color, startPositionRef: HTMLEl
     let iteratorSignY = diffByY === 0 ? 1 : diffByY / Math.abs(diffByY);
     let isOtherWayForKnight = true;
 
+    if (piece === 'knight'){
+        // проверяем два пути для коня
+        return isOtherPieceOnWayKnight(piece, color, startPositionRef, endPositionRef);
+    }
+
     
     for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength; i++){
 
@@ -273,48 +278,7 @@ const isOtherPieceOnWay  = (piece: Piece, color: Color, startPositionRef: HTMLEl
         if (isPieceOnSquare){
             if (isFirstStep >= 1){ // если первый шаг, то это наша фигура
                 console.log("No!")
-                if (piece != 'knight'){
-                    return true; // ели наша фигура не конь, то ходить нельзя
-                }
-                else{
-                    //knight 2nd way handler
-                    isOtherWayForKnight = true;
-                    let knightCurrentX = letters.indexOf(startPosition[0]);
-                    let knightCurrentY = +startPosition[1];
-                    isFirstStep = 0;
-                    for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i <= wayLength; i++){
-                        if (Math.abs(diffByX) > Math.abs(diffByY)){ // дополнительный пкть по Х
-                            squares.forEach(
-                                square => {
-                                    if (square.id === letters[knightCurrentX] + knightCurrentY && square.lastElementChild != null){
-                                        if (isFirstStep >= 1){ 
-                                            console.log("No 2nd way"); 
-                                            isOtherWayForKnight = false;
-                                        };
-                                    }
-                                    
-                                }
-                            );
-                            knightCurrentX += iteratorSignX;
-                        }
-                        else { // ддополнительный путь по Y
-                            squares.forEach(
-                                square => {
-                                    if (square.id === letters[knightCurrentX] + knightCurrentY && square.lastElementChild != null){
-                                        if (isFirstStep >= 1){ 
-                                            console.log("No 2nd way"); 
-                                            isOtherWayForKnight = false;
-                                        };
-                                    }
-                                    
-                                }
-                            );
-                            knightCurrentY += iteratorSignY;
-                            console.log(knightCurrentY)
-                        }
-                        isFirstStep += 1;
-                    }
-                }
+                return true; // ели наша фигура не конь, то ходить нельзя
             }
             isFirstStep += 1;
         }
@@ -323,12 +287,79 @@ const isOtherPieceOnWay  = (piece: Piece, color: Color, startPositionRef: HTMLEl
         if (currentX * iteratorSignX < letters.indexOf(endPosition[0]) * iteratorSignX) currentX = letters.indexOf(letters[currentX + iteratorSignX]);
     }
     
-    // результат функции
-    if (piece == 'knight'){
-        return !isOtherWayForKnight;
-    }
-    else return false;
+    return false;
 
 }
 
+const isOtherPieceOnWayKnight  = (piece: Piece, color: Color, startPositionRef: HTMLElement, endPositionRef: HTMLElement) => {
+    const startPosition = startPositionRef.parentElement?.id as string;
+    const endPosition = endPositionRef.id;
+    const diffByY = +endPosition[1] - +startPosition[1] ;
+    const diffByX = letters.indexOf(endPosition[0]) - letters.indexOf(startPosition[0]);
+    const wayLength = Math.abs(diffByX) + Math.abs(diffByY);
+    let currentX = letters.indexOf(startPosition[0]);
+    let currentY = +startPosition[1];
+    let iteratorSignX = diffByX === 0 ? 1 : diffByX / Math.abs(diffByX);
+    let iteratorSignY = diffByY === 0 ? 1 : diffByY / Math.abs(diffByY);
 
+    let isFirstWay = true;
+    let isSecondWay = true;
+
+    for (let i = Math.min(Math.abs(diffByY), Math.abs(diffByX)); i < wayLength*2; i++){
+        if (Math.abs(diffByX) > Math.abs(diffByY)){ // дополнительный пyть по Х
+            currentX += iteratorSignX;
+            console.log(currentX, currentY)
+            squares.forEach(
+                square => {
+                    if (square.id === letters[currentX] + currentY && square.lastElementChild != null){
+                        // какой путь проверяем
+                        if (i < wayLength){ 
+                            isFirstWay = false; 
+                            //console.log("No 1st way"); 
+                        }
+                        else {
+                            isSecondWay = false;
+                            //console.log("No 2nd way"); 
+                        }
+                    }
+                    
+                }
+            );
+        }
+        else { // дополнительный путь по Y
+            currentY += iteratorSignY;
+            console.log(currentX, currentY)
+            squares.forEach(
+                square => {
+                    if (square.id === letters[currentX] + currentY && square.lastElementChild != null){
+                        if (i < wayLength){ 
+                            isFirstWay = false; 
+                            //console.log("No 1st way"); 
+                        }
+                        else {
+                            isSecondWay = false;
+                            //console.log("No 2nd way"); 
+                        }
+                    }
+                    
+                }
+            );
+        }
+
+        if (i == wayLength - 1){
+            currentX = letters.indexOf(startPosition[0]);
+            currentY = +startPosition[1];
+            if (Math.abs(diffByX) > Math.abs(diffByY)){ 
+                currentY += iteratorSignY;
+                currentX -= iteratorSignX;
+            }
+            else{
+                currentX += iteratorSignX;
+                currentY -= iteratorSignY;
+            }
+        }
+    }
+
+    if (isFirstWay || isSecondWay) return false;
+    else return true;
+}
